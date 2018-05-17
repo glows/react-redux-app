@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { selectSubreddit, fetchPostsIfNeeded, invalidateSubreddit } from "../actions";
 import Picker from "../components/Picker";
+import Posts from "../components/Posts";
 
 class App extends Component {
   static propTypes = {
@@ -33,13 +34,13 @@ class App extends Component {
     e.preventDefault()
 
     const { dispatch, selectedSubreddit } = this.props
-    dispatch(invalidateSubreddit(selectedSubreddit))
     dispatch(fetchPostsIfNeeded(selectedSubreddit))
+    dispatch(invalidateSubreddit(selectedSubreddit))    
   }
   
   render() {
     const { selectedSubreddit, posts, isFetching, lastUpdated } = this.props
-    // const isEmpty = posts.length === 0
+    const isEmpty = posts.length === 0
     return (
       <div>
         <Picker value={selectedSubreddit}
@@ -58,6 +59,13 @@ class App extends Component {
             </button>
           }
         </p>
+        {isEmpty
+            ?(isFetching ? <h2>Loading...</h2>: <h2>Empty</h2>)
+            : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
+              <Posts posts={posts}/>
+            </div>
+
+          }
 
       </div>
     );
