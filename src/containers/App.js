@@ -14,14 +14,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, selectedSubreddit } = this.props;
-    dispatch(fetchPostsIfNeeded(selectedSubreddit));
+    const { dispatch, selectedSubreddit } = this.props
+    dispatch(fetchPostsIfNeeded(selectedSubreddit))
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedSubreddit !== this.props.selectedSubreddit) {
-      const { dispatch, selectedSubreddit } = nextProps;
-      dispatch(fetchPostsIfNeeded(selectedSubreddit));
+      const { dispatch, selectedSubreddit } = nextProps
+      dispatch(fetchPostsIfNeeded(selectedSubreddit))
     }
   }
 
@@ -35,27 +35,28 @@ class App extends Component {
     const { dispatch, selectedSubreddit } = this.props
     dispatch(invalidateSubreddit(selectedSubreddit))
     dispatch(fetchPostsIfNeeded(selectedSubreddit))
-  };
+  }
+  
   render() {
-    const { selectedSubreddit, posts, isFetching, lastUpdated } = this.props;
+    const { selectedSubreddit, posts, isFetching, lastUpdated } = this.props
     // const isEmpty = posts.length === 0
     return (
       <div>
-        <Picker
-          value={selectedSubreddit}
+        <Picker value={selectedSubreddit}
           onChange={this.handleChange}
-          options={["reactjs", "frontend", "javascript", "vuejs"]}
-        />
+          options={[ 'reactjs', 'frontend', 'javascript', 'vuejs' ]} />
         <p>
           {lastUpdated && 
             <span>
-              Last updated at {new Date(lastUpdated).toLocaleDateString()}.
-              {" "}
+              Last updated at {new Date(lastUpdated).toLocaleTimeString()}.
+              {' '}
             </span>
           }
-          {!isFetching && (
-            <button onClick={this.handleRefreshClick}>Refresh </button>
-          )}
+          {!isFetching && 
+            <button onClick={this.handleRefreshClick}>
+            Refresh 
+            </button>
+          }
         </p>
 
       </div>
@@ -63,23 +64,23 @@ class App extends Component {
   }
 }
 
-const mapStateProps = state => {
-  const { selectedSubreddit, postsBySubreddit } = state;
-
-  const  {
+const mapStateToProps = state => {
+  const { selectedSubreddit, postsBySubreddit } = state
+  const {
       isFetching,
       lastUpdated,
-      item: posts
-  } = postsBySubreddit[selectedSubreddit]  || {
+      items: posts
+  } = postsBySubreddit[selectedSubreddit] || {
       isFetching: true,
       items: []
   }
+
   return {
     selectedSubreddit,
     posts,
     isFetching,
     lastUpdated
-  };
-};
+  }
+}
 
-export default connect(mapStateProps)(App);
+export default connect(mapStateToProps)(App)
